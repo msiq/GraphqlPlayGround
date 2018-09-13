@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-const logger = require('./logger');
-const db = require('./database');
+const logger = require('./helpers/logger');
 
 app.use(logger);
-app.get('/', function(req, res) {
+
+app.get('/', function (req, res) {
     res.send(
         `<h1>Node Express</h1>
         <h2>Try one of api routes</h2>
@@ -13,20 +13,11 @@ app.get('/', function(req, res) {
         </ul>`
     );
 });
-const router = express.Router();
-router.get('/', async(req, res) => {
-    try {
-        const result = await db.query('SELECT * FROM country WHERE Capital < 20;')
-        res.json(result);
-    } catch (err) {
-        console.log(err);
-        res.json('somthing went wrong');
-    }
 
-});
-app.use('/api', router);
+app.use('/api', require('./controllers'));
 
 const server = app.listen('7777');
+
 console.log(
     'Node Express in up at http://%s:%s',
     server.address().address

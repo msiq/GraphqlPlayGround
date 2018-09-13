@@ -1,5 +1,3 @@
-// import winston from 'winston';
-// import expressWinston from 'express-winston';
 const winston = require('winston');
 const expressWinston = require('express-winston');
 
