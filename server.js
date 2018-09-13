@@ -9,12 +9,17 @@ app.get('/', function (req, res) {
         `<h1>Node Express</h1>
         <h2>Try one of api routes</h2>
         <ul>
-          <li>/api/info get api info </li>
+          <li>/api/city/{id} get city info </li>
+          <li>/api/country/{code} get country info </li>
         </ul>`
     );
 });
 
 app.use('/api', require('./controllers'));
+
+app.use((req, res, next) => {
+    res.send('<h1>404<h1>');
+});
 
 const server = app.listen('7777');
 

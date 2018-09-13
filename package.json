@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node --use-strict server.js",
+    "start": "nodemon --use-strict server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,5 +14,8 @@
     "express-winston": "^3.0.0",
     "mysql": "^2.16.0",
     "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   }
 }
