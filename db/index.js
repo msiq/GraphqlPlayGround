@@ -16,26 +16,14 @@ class Database {
     //do something
   }
   query(query) {
-    return (new Promise((resolve, reject) => {
-        connection.query(
-          query,
-          (err, rows, fields) => {
-            if (err) reject(err);
-            resolve(rows);
-          });
-      }))
-      .then((rows) => {
-        return new Promise((resolve, reject) => {
-          // connection.end(err => {
-          //   if (err) reject(err);
+    return new Promise((resolve, reject) => {
+      connection.query(
+        query,
+        (err, rows, fields) => {
+          if (err) reject(err);
           resolve(rows);
-          // })
-        })
-      })
-      .catch((err) => {
-
-        return new Promise((resolve, reject) => reject(err));
-      });
+        });
+    })
   }
   getCity(id = required('id')) {
     return this.query(`SELECT * FROM city WHERE ID = ${id};`)
@@ -64,6 +52,19 @@ class Database {
         throw new Error(`No Country found with code ${code}`);
       })
 
+  }
+  getCountryInfo(code) {
+    return this.query(`SELECT * FROM countryinfo WHERE _id = '${code}';`)
+      .then((rows) => {
+        if (rows.length === 0) {
+          throw new Error('Empty result');
+        }
+
+        return rows[0].doc;
+      })
+      .catch((err) => {
+        throw new Error(`No info found Country with code ${code}`);
+      })
   }
   getCitiesByCountry(code) {
     return this.query(`SELECT * FROM city WHERE CountryCode = '${code}';`)
