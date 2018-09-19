@@ -12,9 +12,6 @@ const connection = mysql.createConnection({
 connection.connect();
 
 class Database {
-  constructor() {
-    //do something
-  }
   query(query) {
     return new Promise((resolve, reject) => {
       connection.query(
@@ -32,7 +29,7 @@ class Database {
           throw new Error('Empty result');
         }
 
-        return new City(rows[0].ID, rows[0].Name, rows[0].CountryCode, rows[0].District, rows[0].Info);
+        return new City(rows[0].ID, rows[0].Name, rows[0].CountryCode, rows[0].District, JSON.parse(rows[0].Info));
       })
       .catch((err) => {
         throw new Error(`No City found with id ${id}`);
@@ -46,7 +43,7 @@ class Database {
           throw new Error('Empty result');
         }
 
-        return new Country(rows[0].Code, rows[0].Name, rows[0].Capital, rows[0].code2);
+        return new Country(rows[0].Code, rows[0].Name, rows[0].Capital, rows[0].Code2);
       })
       .catch((err) => {
         throw new Error(`No Country found with code ${code}`);
@@ -73,7 +70,7 @@ class Database {
           throw new Error('Empty result');
         }
 
-        return rows.map((city) => new City(city.ID, city.Name, city.CountryCode, city.District, city.Info));
+        return rows.map((city) => new City(city.ID, city.Name, city.CountryCode, city.District, JSON.parse(city.Info)));
       })
       .catch((err) => {
         throw new Error(`No Country found with code ${code}`);

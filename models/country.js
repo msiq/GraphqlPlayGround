@@ -11,8 +11,8 @@ module.exports = class Country {
     this.info = null;
   }
 
-  async getInfo() {
-    return await db.getCountryInfo(this.code)
+  async getInfo(code) {
+    return await db.getCountryInfo(code)
       .catch((err) => err.message);
   }
 

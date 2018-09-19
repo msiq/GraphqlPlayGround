@@ -1,49 +1,29 @@
 const express = require('express');
 const app = express();
 const logger = require('./helpers/logger');
+const graphHTTP = require('express-graphql');
+const { makeExecutableSchema } = require('graphql-tools');
+const colors = require('./helpers/colors');
+
+const PORT = 7777
+
+const typeDefs = require('./graph/schema');
+const resolvers = require('./graph/resolvers');
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 app.use(logger);
-
-app.get('/', function (req, res) {
-    res.send(
-        `<h1>Node Express</h1>
-        <h2>Try one of api routes</h2>
-        <ul>
-          <li>/api/city/{id} get city info </li>
-          <li>/api/country/{code} get country info </li>
-        </ul>`
-    );
-});
-
+app.use('/gql', graphHTTP({ schema, graphiql: true }));
 app.use('/api', require('./controllers'));
+app.get('/', require('./controllers/main'))
+app.use((req, res, next) => res.send('<h1>404<h1>'));
 
-app.use((req, res, next) => {
-    res.send('<h1>404<h1>');
+app.listen(PORT, () => {
+    console.log(`${colors.FgRed}
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║ ${colors.FgYellow}GraphQL and GraphiQL Server is now running on ${colors.FgBlue}http://localhost:${PORT}/gql    ${colors.FgRed}║
+║ ${colors.FgYellow}API is now running on ${colors.FgBlue}http://localhost:${PORT}/api                            ${colors.FgRed}║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+${colors.Reset}`);
 });
-
-const server = app.listen('7777');
-
-console.log(
-    'Node Express in up at http://%s:%s',
-    server.address().address
-    .split(':')
-    .map((addressPart, ind, address) => {
-        if (ind == 0) {
-            return !addressPart && 127;
-        }
-        if (ind == 1) {
-            return !addressPart && 0;
-        }
-        if (ind == 2) {
-            if (!addressPart && address.length === 3) {
-                return '0:1';
-            }
-            return !addressPart && 0;
-        }
-        if (ind == 3) {
-            return !ippart && 1;
-        }
-    })
-    .join(':'),
-    server.address().port
-);
