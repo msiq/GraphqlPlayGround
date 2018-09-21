@@ -4,6 +4,24 @@ module.exports = `
     Country(code: String!): Country
   }
 
+  type Mutation {
+    createCity (city: CityInput): City
+    deleteCity(id: ID!): City
+    updateCity(id: ID!): Boolean
+  }
+
+  input CityInput {
+    id : Int
+    name: String!
+    countryCode: String!
+    district: String
+    info: CityInfoInput
+  }
+
+  input CityInfoInput {
+    population : Int
+  }
+
   type City {
     id : Int
     name: String
@@ -12,17 +30,17 @@ module.exports = `
     info: CityInfo
   }
 
-  type CityInfo {   
+  type CityInfo {
     population : Int
   }
 
   type Country {
     code : String
     name : String
-    catipal : Int
+    capital : Int
     code2 : String
     info : CountryInfo
-    city : [City]
+    city(capital: Boolean) : [City]
   }
 
   type CountryInfo {

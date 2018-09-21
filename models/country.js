@@ -2,13 +2,14 @@ const required = require('../helpers/required');
 const db = require('../db');
 
 module.exports = class Country {
-  constructor(code = required('code'), name, catipal, code2) {
+  constructor(code = required('code'), name, capital, code2, city) {
 
     this.code = code;
     this.name = name;
-    this.catipal = catipal;
+    this.capital = capital;
     this.code2 = code2;
     this.info = null;
+    this.city = city;
   }
 
   async getInfo(code) {

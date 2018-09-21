@@ -12,7 +12,14 @@ const resolvers = require('./graph/resolvers');
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 app.use(logger);
-app.use('/gql', graphHTTP({ schema, graphiql: true }));
+app.use('/gql', graphHTTP(
+    {
+        schema,
+        graphiql: true,
+        context: {
+            'apiToken': 'sUpeRhArdtOreAdtoKen'
+        }
+    }));
 app.use('/api', require('./controllers'));
 app.get('/', require('./controllers/main'))
 app.use((req, res, next) => res.send('<h1>404<h1>'));

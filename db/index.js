@@ -36,17 +36,43 @@ class Database {
       })
 
   }
+  createCity(city) {
+    return this.query(
+      `INSERT INTO city (Name, CountryCode, District, Info) VALUES ("${city.name}", "${city.countryCode}", "${city.district}", '${city.info && JSON.stringify(city.info)}');`
+    )
+      .then(result => {
+        return this.query(`SELECT * FROM city WHERE ID = ${result.insertId};`)
+        .then((rows) => {
+          if (rows.length === 0) {
+            throw new Error('Empty result');
+          }
+          return new City(rows[0].ID, rows[0].Name, rows[0].CountryCode, rows[0].District, JSON.parse(rows[0].Info));
+        })
+        .catch((err) => {
+          throw new Error(`No City found with id ${id}`);
+        })
+      }).catch((err) => {
+        throw err;//Error(`No City created with id ${id}`);
+      });
+  }
   getCountry(code = required('code')) {
-    return this.query(`SELECT * FROM country WHERE Code = '${code}';`)
+    return this.query(`SELECT * FROM country LEFT JOIN city ON city.CountryCode = country.Code WHERE Code = '${code}' ;`)
       .then((rows) => {
         if (rows.length === 0) {
           throw new Error('Empty result');
         }
 
-        return new Country(rows[0].Code, rows[0].Name, rows[0].Capital, rows[0].Code2);
+        let cities = [];
+        rows.map(row => {
+          cities.push(
+            new City(row.ID, row.Name, row.CountryCode, row.District, JSON.parse(row.Info))
+          );
+        })
+
+        return new Country(rows[0].Code, rows[0].Name, rows[0].Capital, rows[0].Code2, cities);
       })
       .catch((err) => {
-        throw new Error(`No Country found with code ${code}`);
+        throw err;//new Error(`No Country found with code ${code}`);
       })
 
   }
